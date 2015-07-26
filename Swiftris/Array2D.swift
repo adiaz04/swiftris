@@ -18,6 +18,15 @@ class Arrady2D<T> {
         self.columns = columns
         self.rows = rows
         
-        array = Array<T?>(count:rows * columns, repeatedValue)
+        array = Array<T?>(count:rows * columns, repeatedValue: nil)
+    }
+    
+    subscript(column: Int, row: Int) -> T? {
+        get {
+            return array[(row * columns) + column]
+        }
+        set(newValue) {
+            array[(row * columns) + column] = newValue
+        }
     }
 }
