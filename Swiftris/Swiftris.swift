@@ -96,7 +96,7 @@ class Swiftris {
                 blockArray[block.column, block.row] = block
             }
             fallingShape = nil
-            delegate?.gameShapeDidMove(self)
+            delegate?.gameShapeDidLand(self)
         }
     }
     
@@ -186,7 +186,7 @@ class Swiftris {
         for row in 0..<NumRows {
             var rowOfBlocks = Array<Block>()
             for column in 0..<NumColumns {
-                if let blockArray[column, row] {
+                if let block = blockArray[column, row] {
                     rowOfBlocks.append(block)
                     blockArray[column,row] = nil
                 }
@@ -198,6 +198,7 @@ class Swiftris {
     
     func letShapeFall() {
         if let shape = fallingShape {
+            shape.lowerShapeByOneRow()
             if detectIllegalPlacement() {
                 shape.raiseShapeByOneRow()
                 if detectIllegalPlacement() {
