@@ -52,7 +52,7 @@ let FourthBlockIdx: Int = 3
 class Shape: Hashable, Printable {
     // The color of the shape
     let color:BlockColor
-    
+
     // The blocks comprising the shape
     var blocks = Array<Block>()
     // The current orientation of the shape
