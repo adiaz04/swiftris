@@ -15,6 +15,9 @@ let StartingRow = 1
 let PreviewColumn = 12
 let PreviewRow = 1
 
+let PointsPerLine = 10
+let LevelThreshold = 1000
+
 protocol SwiftrisDelegate {
     
     // Invoked when the current round of Swiftris ends
@@ -25,6 +28,9 @@ protocol SwiftrisDelegate {
     
     // Invoked when the falling shape has become part of the game board
     func gameShapeDidLand(swiftris: Swiftris)
+    
+    // Invoked when the falling shape has changed its location
+    func gameShapeDidMove(swiftris: Swiftris)
     
     // Invoked when the falling shape has changed its locaton after being dropped.
     func gameShapeDidDrop(swiftris: Swiftris)
@@ -38,11 +44,15 @@ class Swiftris {
     var nextShape:Shape?
     var fallingShape:Shape?
     var delegate:SwiftrisDelegate?
+    var score:Int
+    var level:Int
     
     init() {
         fallingShape = nil
         nextShape = nil
         blockArray = Array2D<Block>(columns: NumColumns, rows: NumRows)
+        score = 0
+        level = 1
     }
     
     func beginGame() {
@@ -80,5 +90,149 @@ class Swiftris {
         return false
     }
     
+    func settleShape() {
+        if let shape = fallingShape {
+            for block in shape.blocks {
+                blockArray[block.column, block.row] = block
+            }
+            fallingShape = nil
+            delegate?.gameShapeDidMove(self)
+        }
+    }
     
+    func detectTouch() -> Bool {
+        if let shape = fallingShape {
+            for bottomBlock in shape.bottomBlocks {
+                if bottomBlock.row == NumRows - 1 ||
+                    blockArray[bottomBlock.column, bottomBlock.row + 1] != nil {
+                        return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func endGame() {
+        delegate?.gameDidEnd(self)
+        score = 0
+        level = 1
+    }
+    
+    func removeCompletedLines() -> (linesRemoved: Array<Array<Block>>, fallingBlocks: Array<Array<Block>>) {
+        var removedLines = Array<Array<Block>>()
+        for var row = NumRows - 1; row > 0; --row {
+            var rowOfBlocks = Array<Block>()
+            
+            for column in 0..<NumColumns {
+                if let block = blockArray[column, row] {
+                    rowOfBlocks.append(block)
+                }
+            }
+            if rowOfBlocks.count == NumColumns {
+                removedLines.append(rowOfBlocks)
+                for block in rowOfBlocks {
+                    blockArray[block.column, block.row] = nil
+                }
+            }
+        }
+        
+        if removedLines.count == 0 {
+            return ([], [])
+        }
+        
+        let pointsEarned = removedLines.count * PointsPerLine * level
+        score += pointsEarned
+        if score <= level * LevelThreshold {
+            level += 1
+            delegate?.gameDidLevelUp(self)
+        }
+        
+        var fallenBlocks = Array<Array<Block>>()
+        for column in 0..<NumColumns {
+            var fallenBlockArray = Array<Block>()
+            
+            for var row = removedLines[0][0].row - 1; row > 0; --row {
+                if let block = blockArray[column, row] {
+                    var newRow = row
+                    while (newRow < NumRows - 1 && blockArray[column, newRow + 1] == nil) {
+                        ++newRow
+                    }
+                    block.row = newRow
+                    blockArray[column, row] = nil
+                    blockArray[column, newRow] = block
+                    fallenBlockArray.append(block)
+                }
+            }
+            if fallenBlockArray.count > 0 {
+                fallenBlocks.append(fallenBlockArray)
+            }
+        }
+        return (removedLines, fallenBlocks)
+    }
+    
+    
+    func dropShape() {
+        if let shape = fallingShape {
+            while detectIllegalPlacement() == false {
+                shape.lowerShapeByOneRow()
+            }
+            shape.raiseShapeByOneRow()
+            delegate?.gameShapeDidDrop(self)
+        }
+    }
+    
+    func removeAllBlocks() -> Array<Array<Block>> {
+        var allBlocks = Array<Array<Block>>()
+        for row in 0..<NumRows {
+            var rowOfBlocks = Array<Block>()
+            for column in 0..<NumColumns {
+                if let blockArray[column, row] {
+                    rowOfBlocks.append(block)
+                    blockArray[column,row] = nil
+                }
+            }
+            allBlocks.append(rowOfBlocks)
+        }
+        return allBlocks
+    }
+    
+    func letShapeFall() {
+        if let shape = fallingShape {
+            if detectIllegalPlacement() {
+                shape.raiseShapeByOneRow()
+                if detectIllegalPlacement() {
+                    endGame()
+                } else {
+                    settleShape()
+                }
+            } else {
+                delegate?.gameShapeDidMove(self)
+                if detectTouch() {
+                    settleShape()
+                }
+            }
+        }
+    }
+    
+    func rotateShape() {
+        if let shape = fallingShape {
+            shape.rotateClockWise()
+            if detectIllegalPlacement() {
+                shape.rotateCounterClockWise()
+            } else {
+                delegate?.gameShapeDidMove(self)
+            }
+        }
+    }
+    
+    func moveShapeRight() {
+        if let shape = fallingShape {
+            shape.shiftRightByOneColumn()
+            if detectIllegalPlacement() {
+                shape.shiftLeftByOneColumn()
+                return
+            }
+            delegate?.gameShapeDidMove(self)
+        }
+    }
 }
