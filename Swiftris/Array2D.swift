@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Arrady2D<T> {
+class Array2D<T> {
     let columns: Int
     let rows: Int
     

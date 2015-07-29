@@ -26,6 +26,7 @@
 		215E88E11B655100008F611C /* gameboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 215E88DB1B655100008F611C /* gameboard@2x.png */; };
 		215E88E31B6567A4008F611C /* Array2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E88E21B6567A4008F611C /* Array2D.swift */; };
 		2168C1001B68723B00E184B1 /* SquareShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2168C0FF1B68723B00E184B1 /* SquareShape.swift */; };
+		2168C1021B68779E00E184B1 /* Swiftris.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2168C1011B68779E00E184B1 /* Swiftris.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		215E88DB1B655100008F611C /* gameboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gameboard@2x.png"; sourceTree = "<group>"; };
 		215E88E21B6567A4008F611C /* Array2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array2D.swift; sourceTree = "<group>"; };
 		2168C0FF1B68723B00E184B1 /* SquareShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SquareShape.swift; sourceTree = "<group>"; };
+		2168C1011B68779E00E184B1 /* Swiftris.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Swiftris.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				2125C1BC1B659A9300179B01 /* Block.swift */,
 				2125C1BE1B65A58E00179B01 /* Shape.swift */,
 				2168C0FF1B68723B00E184B1 /* SquareShape.swift */,
+				2168C1011B68779E00E184B1 /* Swiftris.swift */,
 			);
 			path = Swiftris;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 				2125C1BF1B65A58E00179B01 /* Shape.swift in Sources */,
 				215E88B51B654F28008F611C /* GameViewController.swift in Sources */,
 				2168C1001B68723B00E184B1 /* SquareShape.swift in Sources */,
+				2168C1021B68779E00E184B1 /* Swiftris.swift in Sources */,
 				2125C1BD1B659A9300179B01 /* Block.swift in Sources */,
 				215E88E31B6567A4008F611C /* Array2D.swift in Sources */,
 				215E88AF1B654F28008F611C /* AppDelegate.swift in Sources */,
